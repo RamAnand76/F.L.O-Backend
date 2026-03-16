@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: flo-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: flo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: flo-backend
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/flo_db
+      - PORT=3001
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+      - JWT_SECRET=your-super-secret-key-min-32-chars
+      - JWT_REFRESH_SECRET=your-refresh-secret-key-min-32-chars
+      - JWT_ACCESS_EXPIRY=15m
+      - JWT_REFRESH_EXPIRY=7d
+      - GITHUB_API_TOKEN=${GITHUB_API_TOKEN}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

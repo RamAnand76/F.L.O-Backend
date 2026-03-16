@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  githubProfile GithubProfile?
+  portfolio     Portfolio?
+
+  @@map("users")
+}
+
+model GithubProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  githubLogin   String
+  githubId      Int
+  avatarUrl     String
+  htmlUrl       String
+  name          String?
+  company       String?
+  blog          String?
+  location      String?
+  email         String?
+  bio           String?
+  publicRepos   Int      @default(0)
+  followers     Int      @default(0)
+  following     Int      @default(0)
+
+  repositories  Repository[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("github_profiles")
+}
+
+model Repository {
+  id              String   @id @default(cuid())
+  githubProfileId String
+  githubProfile   GithubProfile @relation(fields: [githubProfileId], references: [id], onDelete: Cascade)
+
+  githubRepoId    Int
+  name            String
+  fullName        String
+  htmlUrl         String
+  description     String?
+  stargazersCount Int      @default(0)
+  language        String?
+  homepage        String?
+  updatedAt       String   // ISO date string from GitHub
+
+  @@map("repositories")
+}
+
+model Portfolio {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  selectedRepoIds Int[]    // Array of GitHub repo IDs
+  skills          String[] // Array of skill strings
+  selectedTemplate String  @default("minimal") // 'minimal' | 'developer' | 'creative'
+
+  customName      String   @default("")
+  customBio       String   @default("")
+  customEmail     String   @default("")
+  customLocation  String   @default("")
+  customWebsite   String   @default("")
+  customGithub    String   @default("")
+  customTwitter   String   @default("")
+  customLinkedin  String   @default("")
+
+  deployedUrl     String?
+  repoName        String?
+  customDomain    String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("portfolios")
+}

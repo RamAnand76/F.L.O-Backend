@@ -1,0 +1,15 @@
+export const updateProfileSchema = {
+  body: {
+    type: 'object',
+    properties: {
+      name: { type: 'string' },
+      bio: { type: 'string' },
+      email: { type: 'string', format: 'email' },
+      location: { type: 'string' },
+      website: { type: 'string' },
+      github: { type: 'string' },
+      twitter: { type: 'string' },
+      linkedin: { type: 'string' },
+    },
+  },
+};
