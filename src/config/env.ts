@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import fastifyEnv from '@fastify/env';
+import 'dotenv/config';
 
 const schema = {
   type: 'object',
@@ -41,7 +42,7 @@ declare module 'fastify' {
 async function envPlugin(fastify: FastifyInstance) {
   await fastify.register(fastifyEnv, {
     schema,
-    dotenv: true,
+    data: process.env,
   });
 }
 
