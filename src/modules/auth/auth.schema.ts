@@ -1,4 +1,5 @@
 export const registerSchema = {
+  tags: ['Auth'],
   body: {
     type: 'object',
     required: ['name', 'email', 'password'],
@@ -11,6 +12,7 @@ export const registerSchema = {
 };
 
 export const loginSchema = {
+  tags: ['Auth'],
   body: {
     type: 'object',
     required: ['email', 'password'],
@@ -22,6 +24,7 @@ export const loginSchema = {
 };
 
 export const refreshSchema = {
+  tags: ['Auth'],
   body: {
     type: 'object',
     required: ['refreshToken'],
@@ -29,4 +32,14 @@ export const refreshSchema = {
       refreshToken: { type: 'string' },
     },
   },
+};
+
+export const meSchema = {
+  tags: ['Auth'],
+  security: [{ bearerAuth: [] }],
+};
+
+export const logoutSchema = {
+  tags: ['Auth'],
+  security: [{ bearerAuth: [] }],
 };

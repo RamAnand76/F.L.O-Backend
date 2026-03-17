@@ -1,4 +1,6 @@
 export const updateReposSchema = {
+  tags: ['Portfolio'],
+  security: [{ bearerAuth: [] }],
   body: {
     type: 'object',
     required: ['selectedRepoIds'],
@@ -9,6 +11,8 @@ export const updateReposSchema = {
 };
 
 export const updateSkillsSchema = {
+  tags: ['Portfolio'],
+  security: [{ bearerAuth: [] }],
   body: {
     type: 'object',
     required: ['skills'],
@@ -19,6 +23,8 @@ export const updateSkillsSchema = {
 };
 
 export const updateTemplateSchema = {
+  tags: ['Portfolio'],
+  security: [{ bearerAuth: [] }],
   body: {
     type: 'object',
     required: ['selectedTemplate'],
@@ -26,4 +32,14 @@ export const updateTemplateSchema = {
       selectedTemplate: { type: 'string', enum: ['minimal', 'developer', 'creative'] },
     },
   },
+};
+
+export const getPortfolioSchema = {
+  tags: ['Portfolio'],
+  security: [{ bearerAuth: [] }],
+};
+
+export const getExportSchema = {
+  tags: ['Portfolio'],
+  security: [{ bearerAuth: [] }],
 };

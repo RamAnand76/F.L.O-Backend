@@ -1,4 +1,6 @@
 export const updateProfileSchema = {
+  tags: ['Profile'],
+  security: [{ bearerAuth: [] }],
   body: {
     type: 'object',
     properties: {
@@ -12,4 +14,9 @@ export const updateProfileSchema = {
       linkedin: { type: 'string' },
     },
   },
+};
+
+export const getProfileSchema = {
+  tags: ['Profile'],
+  security: [{ bearerAuth: [] }],
 };

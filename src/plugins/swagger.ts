@@ -8,7 +8,7 @@ async function swaggerPlugin(fastify: FastifyInstance) {
     openapi: {
       info: {
         title: 'F.L.O API',
-        description: 'Backend API for F.L.O Portfolio Generator',
+        description: 'Backend API for F.L.O Portfolio Generator. Use the /auth/login endpoint to get a token, then paste it in the "Authorize" button (format: Bearer <token>).',
         version: '1.0.0',
       },
       servers: [
@@ -26,11 +26,18 @@ async function swaggerPlugin(fastify: FastifyInstance) {
           },
         },
       },
+      // Note: We don't set global security here to allow login/register to remain public in the UI
     },
   });
 
   await fastify.register(fastifySwaggerUi, {
     routePrefix: '/documentation',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: false,
+    },
+    staticCSP: true,
+    transformStaticCSP: (header) => header,
   });
 }
 
