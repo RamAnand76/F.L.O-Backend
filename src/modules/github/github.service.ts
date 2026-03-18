@@ -190,10 +190,8 @@ export class GithubService {
       page++;
     }
 
-    // Filter repos: Exclude forks, require description (remove the previous 20-repo limit)
-    const filteredRepos = allRepos.filter(
-      (repo: any) => !repo.fork && repo.description !== null
-    );
+    // Return all public repos without filtering out forks or repos without descriptions
+    const filteredRepos = allRepos;
 
     return {
       user: userData,
