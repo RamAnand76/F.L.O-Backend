@@ -18,4 +18,10 @@ export class ProfileController {
       data: result,
     };
   }
+
+  async getSummary(request: FastifyRequest, reply: FastifyReply) {
+    const userId = (request.user as any).id;
+    const result = await this.profileService.getSummary(userId);
+    return result;
+  }
 }

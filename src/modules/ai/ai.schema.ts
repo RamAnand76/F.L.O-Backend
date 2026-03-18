@@ -1,4 +1,6 @@
 export const enhanceSchema = {
+  tags: ['AI'],
+  security: [{ bearerAuth: [] }],
   body: {
     type: 'object',
     required: ['prompt', 'context'],

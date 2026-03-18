@@ -20,3 +20,8 @@ export const getProfileSchema = {
   tags: ['Profile'],
   security: [{ bearerAuth: [] }],
 };
+
+export const getSummarySchema = {
+  tags: ['Profile'],
+  security: [{ bearerAuth: [] }],
+};
