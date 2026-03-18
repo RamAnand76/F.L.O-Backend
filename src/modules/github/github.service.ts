@@ -67,15 +67,27 @@ export class GithubService {
     return githubData;
   }
 
-  async getProfile(userId: string) {
+  async getProfile(userId: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
     const profile = await this.prisma.githubProfile.findUnique({
       where: { userId },
-      include: { repositories: true },
+      include: {
+        repositories: {
+          skip,
+          take: limit,
+          orderBy: { updatedAt: 'desc' },
+        },
+      },
     });
 
     if (!profile) {
       throw new AppError('GitHub profile not found for this user', 404);
     }
+
+    const totalRepos = await this.prisma.repository.count({
+      where: { githubProfileId: profile.id },
+    });
 
     // Map back to the shape frontend expects
     const user = {
@@ -106,7 +118,16 @@ export class GithubService {
       updated_at: repo.updatedAt,
     }));
 
-    return { user, repos };
+    return { 
+      user, 
+      repos,
+      pagination: {
+        totalItems: totalRepos,
+        totalPages: Math.ceil(totalRepos / limit),
+        currentPage: page,
+        itemsPerPage: limit,
+      }
+    };
   }
 
   async disconnect(userId: string) {
@@ -140,22 +161,39 @@ export class GithubService {
 
     const userData: any = await userBody.json();
 
-    // 2. Fetch Repositories
-    const { body: repoBody, statusCode: repoStatus } = await request(
-      `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`,
-      { headers }
-    );
+    // 2. Fetch Repositories with pagination to ensure we get all
+    let allRepos: any[] = [];
+    let page = 1;
 
-    if (repoStatus !== 200) {
-      throw new AppError(`GitHub API error: ${repoStatus}`, repoStatus);
+    while (true) {
+      const { body: repoBody, statusCode: repoStatus } = await request(
+        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100&page=${page}`,
+        { headers }
+      );
+
+      if (repoStatus !== 200) {
+        throw new AppError(`GitHub API error: ${repoStatus}`, repoStatus);
+      }
+
+      const repoData: any = await repoBody.json();
+      
+      if (!Array.isArray(repoData) || repoData.length === 0) {
+        break;
+      }
+
+      allRepos = allRepos.concat(repoData);
+
+      if (repoData.length < 100) {
+        break;
+      }
+      
+      page++;
     }
 
-    const repoData: any = await repoBody.json();
-
-    // Filter repos: Exclude forks, require description, limit to 20
-    const filteredRepos = repoData
-      .filter((repo: any) => !repo.fork && repo.description !== null)
-      .slice(0, 20);
+    // Filter repos: Exclude forks, require description (remove the previous 20-repo limit)
+    const filteredRepos = allRepos.filter(
+      (repo: any) => !repo.fork && repo.description !== null
+    );
 
     return {
       user: userData,

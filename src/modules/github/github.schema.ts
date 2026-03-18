@@ -13,6 +13,13 @@ export const connectSchema = {
 export const getProfileSchema = {
   tags: ['GitHub'],
   security: [{ bearerAuth: [] }],
+  querystring: {
+    type: 'object',
+    properties: {
+      page: { type: 'number', minimum: 1 },
+      limit: { type: 'number', minimum: 1, maximum: 100 },
+    },
+  },
 };
 
 export const refreshGithubSchema = {

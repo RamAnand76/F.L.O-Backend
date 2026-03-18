@@ -6,7 +6,7 @@ export const updateProfileSchema = {
     properties: {
       name: { type: 'string' },
       bio: { type: 'string' },
-      email: { type: 'string', format: 'email' },
+      email: { type: 'string' }, // removed strict format: 'email' to allow empty inputs without throwing opaque fetch errors
       location: { type: 'string' },
       website: { type: 'string' },
       github: { type: 'string' },

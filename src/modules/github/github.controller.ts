@@ -13,7 +13,12 @@ export class GithubController {
 
   async getProfile(request: FastifyRequest, reply: FastifyReply) {
     const userId = (request.user as any).id;
-    const result = await this.githubService.getProfile(userId);
+    const { page, limit } = request.query as any;
+    
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 10;
+
+    const result = await this.githubService.getProfile(userId, pageNum, limitNum);
     return result;
   }
 

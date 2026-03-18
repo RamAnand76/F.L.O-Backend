@@ -8,7 +8,7 @@ async function swaggerPlugin(fastify: FastifyInstance) {
     openapi: {
       info: {
         title: 'F.L.O API',
-        description: 'Backend API for F.L.O Portfolio Generator. Use the /auth/login endpoint to get a token, then paste it in the "Authorize" button (format: Bearer <token>).',
+        description: 'Backend API for F.L.O Portfolio Generator. Click the "Authorize" button to log in with your email and password.',
         version: '1.0.0',
       },
       servers: [
@@ -20,9 +20,13 @@ async function swaggerPlugin(fastify: FastifyInstance) {
       components: {
         securitySchemes: {
           bearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
+            type: 'oauth2',
+            flows: {
+              password: {
+                tokenUrl: '/api/auth/swagger-login',
+                scopes: {},
+              },
+            },
           },
         },
       },
