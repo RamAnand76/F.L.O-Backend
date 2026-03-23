@@ -187,7 +187,41 @@ Most endpoints require authentication using a **Bearer Token**.
   }
   ```
 
-### 2. Update Profile
+### 2. Get Dashboard Summary
+- **URL**: `/summary`
+- **Method**: `GET`
+- **Auth Required**: Yes
+- **Response (200 OK)**:
+  ```json
+  {
+    "user": { "id": "...", "name": "...", "email": "..." },
+    "github": {
+      "connected": true,
+      "login": "octocat",
+      "avatar": "...",
+      "publicRepos": 20
+    },
+    "portfolio": {
+      "id": "...",
+      "skills": ["JavaScript", "Node.js"],
+      "reposCount": 5,
+      "template": "developer",
+      "deployedUrl": "https://...",
+      "customData": {
+        "name": "...",
+        "bio": "...",
+        "email": "...",
+        "location": "...",
+        "website": "...",
+        "github": "...",
+        "twitter": "...",
+        "linkedin": "..."
+      }
+    }
+  }
+  ```
+
+### 3. Update Profile
 - **URL**: `/`
 - **Method**: `PUT`
 - **Auth Required**: Yes
