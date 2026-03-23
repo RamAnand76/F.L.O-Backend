@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = "postgresql://postgres:Alok%26%2676@localhost:5432/flo_db"
 }
 
 model User {
