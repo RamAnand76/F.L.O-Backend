@@ -140,19 +140,50 @@ export class GithubService {
     return { message: 'Disconnected successfully' };
   }
 
-  private async fetchGithubData(username: string) {
+  async getProfileReadme(username: string): Promise<string | null> {
+    try {
+      // GitHub API to get specific repo readme
+      // The profile README is always in a repo named after the user
+      const { body, statusCode } = await this.makeRequest(
+        `https://api.github.com/repos/${username}/${username}/readme`
+      );
+
+      if (statusCode === 404) return null;
+      if (statusCode !== 200) {
+        throw new AppError(`GitHub API error: ${statusCode}`, statusCode);
+      }
+
+      const data: any = await body.json();
+      
+      // The content is base64 encoded
+      if (data.content && data.encoding === 'base64') {
+        return Buffer.from(data.content, 'base64').toString('utf-8');
+      }
+
+      return null;
+    } catch (err) {
+      // If repo or readme doesn't exist, return null gracefully
+      return null;
+    }
+  }
+
+  private async makeRequest(url: string, options: any = {}) {
     const headers: Record<string, string> = {
       'User-Agent': 'FLO-Backend',
+      ...options.headers,
     };
 
     if (this.token) {
       headers['Authorization'] = `token ${this.token}`;
     }
 
+    return request(url, { ...options, headers });
+  }
+
+  private async fetchGithubData(username: string) {
     // 1. Fetch User Profile
-    const { body: userBody, statusCode: userStatus } = await request(
-      `https://api.github.com/users/${username}`,
-      { headers }
+    const { body: userBody, statusCode: userStatus } = await this.makeRequest(
+      `https://api.github.com/users/${username}`
     );
 
     if (userStatus !== 200) {
@@ -166,9 +197,8 @@ export class GithubService {
     let page = 1;
 
     while (true) {
-      const { body: repoBody, statusCode: repoStatus } = await request(
-        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100&page=${page}`,
-        { headers }
+      const { body: repoBody, statusCode: repoStatus } = await this.makeRequest(
+        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100&page=${page}`
       );
 
       if (repoStatus !== 200) {

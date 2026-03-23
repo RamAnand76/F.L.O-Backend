@@ -87,8 +87,48 @@ model Portfolio {
   repoName        String?
   customDomain    String?
 
+  education       Education[]
+  experience      Experience[]
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   @@map("portfolios")
+}
+
+model Education {
+  id           String    @id @default(cuid())
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  
+  school       String
+  degree       String?
+  fieldOfStudy String?
+  startDate    String?   // Changed to String to allow flexible input from AI/Resume
+  endDate      String?
+  description  String?
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("educations")
+}
+
+model Experience {
+  id           String    @id @default(cuid())
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  
+  company      String
+  position     String
+  location     String?
+  startDate    String?   // Changed to String to allow flexible input from AI/Resume
+  endDate      String?
+  description  String?
+  isCurrent    Boolean   @default(false)
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("experiences")
 }

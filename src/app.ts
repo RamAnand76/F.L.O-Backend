@@ -7,6 +7,7 @@ import authPlugin from './plugins/auth';
 import swaggerPlugin from './plugins/swagger';
 import corsPlugin from './plugins/cors';
 import rateLimitPlugin from './plugins/rate-limit';
+import multipartPlugin from './plugins/multipart';
 import { AppError } from './utils/errors';
 import { authRoutes } from './modules/auth/auth.routes';
 import { githubRoutes } from './modules/github/github.routes';
@@ -37,6 +38,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(prismaPlugin);
   await app.register(authPlugin);
   await app.register(swaggerPlugin);
+  await app.register(multipartPlugin);
 
   // Register modules
   await app.register(authRoutes, { prefix: '/api/auth' });
