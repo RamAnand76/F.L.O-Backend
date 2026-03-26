@@ -13,7 +13,7 @@ export class AiService {
 
   async enhanceContent(prompt: string, context: { field: string; currentValue: string }) {
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
       const aiPrompt = `
         You are an expert portfolio content enhancer.
@@ -39,7 +39,7 @@ export class AiService {
 
   async extractPortfolioData(content: string) {
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
       const aiPrompt = `
         You are an expert at extracting professional information from text.
