@@ -17,6 +17,7 @@ const schema = {
     JWT_REFRESH_EXPIRY: { type: 'string', default: '7d' },
     GITHUB_API_TOKEN: { type: 'string' },
     GEMINI_API_KEY: { type: 'string' },
+    OPENROUTER_API_KEY: { type: 'string' },
     FRONTEND_URL: { type: 'string', default: 'http://localhost:3000' },
   },
 };
@@ -34,6 +35,7 @@ declare module 'fastify' {
       JWT_REFRESH_EXPIRY: string;
       GITHUB_API_TOKEN?: string;
       GEMINI_API_KEY?: string;
+      OPENROUTER_API_KEY?: string;
       FRONTEND_URL: string;
     };
   }

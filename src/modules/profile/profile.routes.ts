@@ -15,7 +15,10 @@ import { authenticate } from '../../middleware/authenticate';
 
 export async function profileRoutes(fastify: FastifyInstance) {
   const githubService = new GithubService(fastify.prisma, fastify.config.GITHUB_API_TOKEN);
-  const aiService = new AiService(fastify.config.GEMINI_API_KEY!);
+  const aiService = new AiService(
+    fastify.config.GEMINI_API_KEY ?? '',
+    fastify.config.OPENROUTER_API_KEY ?? '',
+  );
   
   const profileService = new ProfileService(fastify.prisma, githubService, aiService);
   const controller = new ProfileController(profileService);
