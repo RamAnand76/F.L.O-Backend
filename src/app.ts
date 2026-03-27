@@ -15,6 +15,8 @@ import { profileRoutes } from './modules/profile/profile.routes';
 import { portfolioRoutes } from './modules/portfolio/portfolio.routes';
 import { deployRoutes } from './modules/deploy/deploy.routes';
 import { aiRoutes } from './modules/ai/ai.routes';
+import { testimonialRoutes } from './modules/testimonial/testimonial.routes';
+import { assetRoutes } from './modules/asset/asset.routes';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = fastify({
@@ -47,6 +49,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(portfolioRoutes, { prefix: '/api/portfolio' });
   await app.register(deployRoutes, { prefix: '/api/deploy' });
   await app.register(aiRoutes, { prefix: '/api/ai' });
+  await app.register(testimonialRoutes, { prefix: '/api/testimonials' });
+  await app.register(assetRoutes, { prefix: '/api/assets' });
 
   // Health check route
   app.get('/api/health', async () => {

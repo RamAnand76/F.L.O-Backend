@@ -17,6 +17,8 @@ model User {
 
   githubProfile GithubProfile?
   portfolio     Portfolio?
+  testimonials  Testimonial[]
+  assets        Asset[]
 
   @@map("users")
 }
@@ -132,4 +134,38 @@ model Experience {
   updatedAt    DateTime  @updatedAt
 
   @@map("experiences")
+}
+
+model Testimonial {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name         String
+  role         String
+  content      String    @db.Text
+  avatarUrl    String?
+  isFeatured   Boolean   @default(false)
+  caseStudyUrl String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("testimonials")
+}
+
+model Asset {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name         String
+  type         String
+  url          String
+  size         Int?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("assets")
 }
